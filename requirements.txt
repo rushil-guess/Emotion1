@@ -4,7 +4,7 @@ Flask==3.0.0
 Werkzeug==3.0.1
 
 # Machine Learning & Deep Learning
-tensorflow==2.15.0
+tensorflow==2.20.0rc0
 keras==2.15.0
 numpy==1.24.3
 
