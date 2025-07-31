@@ -1,180 +1,436 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Facial Emotion Detection</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"/>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <style>
-    body {
-      background: linear-gradient(135deg, #74ebd5, #acb6e5);
-      font-family: 'Arial', sans-serif;
-      padding: 20px;
-      color: #333;
-      scroll-behavior: smooth;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Emotion Detector - Home</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .navbar-brand {
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
 
-    .app-title {
-      font-size: 2.5rem;
-      color: #ffffff;
-      background-color: #4a90e2;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      letter-spacing: 1px;
-    }
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
 
-    .upload-form {
-      background: #ffffff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-top: 30px;
-    }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
 
-    .result-box {
-      background: #fff;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      margin-top: 40px;
-      transition: transform 0.3s;
-    }
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
 
-    .result-box:hover {
-      transform: scale(1.02);
-    }
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
 
-    .img-fluid {
-      max-width: 100%;
-      height: auto;
-      border: 5px solid #4a90e2;
-      border-radius: 12px;
-      margin-top: 20px;
-    }
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
 
-    .emotion-label {
-      font-size: 1.8rem;
-      color: #4a4a4a;
-      margin: 15px 0;
-    }
+        .nav-link:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
 
-    .highlight {
-      color: #e94e77;
-      font-weight: bold;
-    }
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
 
-    .confidence-score {
-      font-size: 1.2rem;
-      color: #555;
-      background: #dff9fb;
-      padding: 8px 12px;
-      border-radius: 8px;
-      display: inline-block;
-      margin-top: 5px;
-    }
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 20px;
+        }
 
-    .about-section {
-      background: #f0f8ff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      margin-top: 40px;
-      text-align: left;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    .feature-list {
-      padding-left: 20px;
-      color: #333;
-    }
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 0;
+            color: white;
+        }
 
-    .feature-list li {
-      margin-bottom: 10px;
-    }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
 
-    .btn-primary:hover {
-      background-color: #357ae8;
-      border-color: #357ae8;
-    }
-  </style>
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 4rem;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .feature-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .feature-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Stats Section */
+        .stats {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 60px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-smile"></i> AI Emotion Detector
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link active">Home</a></li>
+                <li><a href="/upload" class="nav-link">Upload Image</a></li>
+                <li><a href="/live" class="nav-link">Live Detection</a></li>
+                <li><a href="/about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
 
-  <!-- Navigation Bar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="#">EmotionApp</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link active" href="#">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#how-it-works">How It Works</a>
-          </li>
-        </ul>
-      </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="hero">
+                <h1>Discover Emotions with AI</h1>
+                <p>Advanced facial emotion detection powered by deep learning. Upload images or use live webcam detection to analyze emotions in real-time.</p>
+            </div>
+
+            <!-- Feature Cards -->
+            <div class="features-grid">
+                <a href="/upload" class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-upload"></i>
+                    </div>
+                    <div class="feature-title">Upload & Analyze</div>
+                    <div class="feature-desc">Upload facial images and get instant emotion analysis with confidence scores and detailed results.</div>
+                    <div class="feature-btn">Try Upload</div>
+                </a>
+
+                <a href="/live" class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="feature-title">Live Detection</div>
+                    <div class="feature-desc">Use your webcam for real-time emotion detection. See emotions change as you express different feelings.</div>
+                    <div class="feature-btn">Start Live</div>
+                </a>
+
+                <a href="/about" class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="feature-title">Learn More</div>
+                    <div class="feature-desc">Discover how our AI model works, the technology behind it, and tips for getting the best results.</div>
+                    <div class="feature-btn">Learn More</div>
+                </a>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="stats">
+                <h2 style="margin-bottom: 40px; font-size: 2rem;">Why Choose Our AI?</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <h3>7</h3>
+                        <p>Emotion Categories</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>95%+</h3>
+                        <p>Accuracy Rate</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>Real-time</h3>
+                        <p>Live Processing</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3>Instant</h3>
+                        <p>Results</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </nav>
 
-  <!-- Main Container -->
-  <div class="container text-center my-5">
-    <h1 class="app-title">Facial Emotion Detection App 😃</h1>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-smile"></i> AI Emotion Detector</h3>
+                    <p>Advanced facial emotion recognition powered by deep learning technology.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/upload">Upload Image</a></li>
+                        <li><a href="/live">Live Detection</a></li>
+                        <li><a href="/about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Technology</h4>
+                    <ul>
+                        <li>TensorFlow</li>
+                        <li>OpenCV</li>
+                        <li>Flask</li>
+                        <li>Deep Learning</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/rushil-reddy-gujjula-12212a284" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                        <a href="https://github.com/rushil-guess" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AI Emotion Detector. Developed by <a href="https://www.linkedin.com/in/rushil-reddy-gujjula-12212a284" target="_blank">Rushil Reddy Gujjula</a></p>
+            </div>
+        </div>
+    </footer>
 
-    <form action="/" method="POST" enctype="multipart/form-data" class="upload-form mt-4">
-      <input type="file" name="file" class="form-control mb-3" required>
-      <button type="submit" class="btn btn-primary w-100">Upload & Detect Emotion</button>
-    </form>
-    
-    {% if image_path %}
-    <div class="result-box mt-4">
-      <h2>Prediction Result</h2>
-      <img src="{{ image_path }}" alt="Uploaded Image" class="img-fluid rounded">
-      <h3 class="emotion-label">Emotion: <span class="highlight">{{ emotion }}</span></h3>
-      <p class="confidence-score">Confidence: {{ confidence }}%</p>
-    </div>
-    {% endif %}
-    <!-- About Section -->
-    <div class="about-section mt-5" id="about">
-      <h2>About This App</h2>
-      <p>This Facial Emotion Detection App uses a deep learning model trained on the <strong>FER2013</strong> dataset. The dataset contains 35,887 grayscale images of 48x48 pixels, each labeled with one of seven emotions.</p>
-      <h4>Features:</h4>
-      <ul class="feature-list">
-        <li>Upload an image and detect emotion instantly</li>
-        <li>Model trained on FER2013 dataset with high accuracy</li>
-        <li>Visual display of uploaded image and prediction</li>
-        <li>Confidence score for prediction</li>
-      </ul>
-    </div>
+    <style>
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
 
-    <!-- How It Works Section -->
-    <div class="about-section mt-5" id="how-it-works">
-      <h2>How It Works</h2>
-      <ol class="feature-list">
-        <li><strong>Select Image:</strong> Upload a clear facial image (grayscale preferred).</li>
-        <li><strong>Model Prediction:</strong> The image is processed and passed through a trained neural network.</li>
-        <li><strong>Emotion Classification:</strong> The model classifies the emotion from 7 categories.</li>
-        <li><strong>Result Display:</strong> Predicted emotion and confidence score are shown on screen.</li>
-      </ol>
-    </div>
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
 
-    <!-- Prediction Result -->
+        .footer-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
 
-  </div>
+        .footer-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        .footer-section p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #667eea;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .social-link:hover {
+            color: #667eea;
+        }
+
+        .social-link i {
+            font-size: 1.2rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .footer-bottom a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
 </body>
 </html>

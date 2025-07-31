@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Emotion Detector - Live Detection</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            min-height: 700px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        /* Webcam Section */
+        .webcam-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .webcam-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .webcam-container {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            min-height: 500px;
+        }
+
+        .webcam-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .face-box {
+            position: absolute;
+            border: 3px solid #667eea;
+            border-radius: 8px;
+            background: rgba(102, 126, 234, 0.1);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .emotion-label {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .confidence-text {
+            position: absolute;
+            bottom: -30px;
+            left: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.8rem;
+        }
+
+        /* Controls */
+        .controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .control-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin: 0 10px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        .control-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .control-btn.stop {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        /* Results Panel */
+        .results-panel {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e1e5e9;
+            height: fit-content;
+        }
+
+        .results-title {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .emotion-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+
+        .emotion-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid #e1e5e9;
+            transition: all 0.3s ease;
+        }
+
+        .emotion-card.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+            transform: scale(1.05);
+        }
+
+        .emotion-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .emotion-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .emotion-confidence {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Status */
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .status.connecting {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status.connected {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 20px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .control-btn {
+                margin: 5px;
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-smile"></i> AI Emotion Detector
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/upload" class="nav-link">Upload Image</a></li>
+                <li><a href="/live" class="nav-link active">Live Detection</a></li>
+                <li><a href="/about" class="nav-link">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="main-card">
+                <h1 class="page-title">Live Emotion Detection</h1>
+                
+                <!-- Status -->
+                <div id="status" class="status connecting">
+                    <i class="fas fa-circle-notch fa-spin"></i> Initializing camera...
+                </div>
+
+                <!-- Camera Permission Guide -->
+                <div id="permissionGuide" class="permission-guide" style="display: none;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">
+                        <i class="fas fa-camera"></i> Camera Permission Required
+                    </h3>
+                    <div style="background: #f8f9ff; border: 1px solid #e1e5e9; border-radius: 10px; padding: 20px; margin-bottom: 20px;">
+                        <h4 style="color: #333; margin-bottom: 10px;">How to enable camera access:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                            <div>
+                                <strong>Chrome/Edge:</strong>
+                                <ul style="margin: 5px 0 0 20px; color: #666;">
+                                    <li>Click the camera icon in the address bar</li>
+                                    <li>Select "Allow" for camera access</li>
+                                    <li>Refresh the page if needed</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Firefox:</strong>
+                                <ul style="margin: 5px 0 0 20px; color: #666;">
+                                    <li>Click the camera icon in the address bar</li>
+                                    <li>Choose "Allow" for camera permissions</li>
+                                    <li>Refresh the page if needed</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Safari:</strong>
+                                <ul style="margin: 5px 0 0 20px; color: #666;">
+                                    <li>Go to Safari > Preferences > Websites > Camera</li>
+                                    <li>Allow camera access for this site</li>
+                                    <li>Refresh the page</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <button onclick="retryCamera()" style="background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin-top: 15px; cursor: pointer;">
+                            <i class="fas fa-redo"></i> Retry Camera Access
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="controls">
+                    <button id="startBtn" class="control-btn">
+                        <i class="fas fa-play"></i> Start Detection
+                    </button>
+                    <button id="stopBtn" class="control-btn stop" disabled>
+                        <i class="fas fa-stop"></i> Stop Detection
+                    </button>
+                </div>
+
+                <!-- Webcam Section -->
+                <div class="webcam-section">
+                    <div class="webcam-container">
+                        <video id="video" autoplay muted></video>
+                        <canvas id="overlay" class="webcam-overlay"></canvas>
+                    </div>
+                    
+                    <div class="results-panel">
+                        <h3 class="results-title">Real-time Results</h3>
+                        <div class="emotion-grid" id="emotionGrid">
+                            <div class="emotion-card" data-emotion="Happy">
+                                <div class="emotion-icon">😊</div>
+                                <div class="emotion-name">Happy</div>
+                                <div class="emotion-confidence">0%</div>
+                            </div>
+                            <div class="emotion-card" data-emotion="Sad">
+                                <div class="emotion-icon">😢</div>
+                                <div class="emotion-name">Sad</div>
+                                <div class="emotion-confidence">0%</div>
+                            </div>
+                            <div class="emotion-card" data-emotion="Angry">
+                                <div class="emotion-icon">😠</div>
+                                <div class="emotion-name">Angry</div>
+                                <div class="emotion-confidence">0%</div>
+                            </div>
+                            <div class="emotion-card" data-emotion="Fear">
+                                <div class="emotion-icon">😨</div>
+                                <div class="emotion-name">Fear</div>
+                                <div class="emotion-confidence">0%</div>
+                            </div>
+                            <div class="emotion-card" data-emotion="Surprise">
+                                <div class="emotion-icon">😲</div>
+                                <div class="emotion-name">Surprise</div>
+                                <div class="emotion-confidence">0%</div>
+                            </div>
+                            <div class="emotion-card" data-emotion="Disgust">
+                                <div class="emotion-icon">🤢</div>
+                                <div class="emotion-name">Disgust</div>
+                                <div class="emotion-confidence">0%</div>
+                            </div>
+                            <div class="emotion-card" data-emotion="Neutral">
+                                <div class="emotion-icon">😐</div>
+                                <div class="emotion-name">Neutral</div>
+                                <div class="emotion-confidence">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-smile"></i> AI Emotion Detector</h3>
+                    <p>Advanced facial emotion recognition powered by deep learning technology.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/upload">Upload Image</a></li>
+                        <li><a href="/live">Live Detection</a></li>
+                        <li><a href="/about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Technology</h4>
+                    <ul>
+                        <li>TensorFlow</li>
+                        <li>OpenCV</li>
+                        <li>Flask</li>
+                        <li>Deep Learning</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/rushil-reddy-gujjula-12212a284" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                        <a href="https://github.com/rushil-guess" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AI Emotion Detector. Developed by <a href="https://www.linkedin.com/in/rushil-reddy-gujjula-12212a284" target="_blank">Rushil Reddy Gujjula</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .footer-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .footer-section p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #667eea;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .social-link:hover {
+            color: #667eea;
+        }
+
+        .social-link i {
+            font-size: 1.2rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .footer-bottom a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+
+    <script>
+        let stream = null;
+        let isDetecting = false;
+        let detectionInterval = null;
+        const video = document.getElementById('video');
+        const overlay = document.getElementById('overlay');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const status = document.getElementById('status');
+        const emotionGrid = document.getElementById('emotionGrid');
+
+        // Initialize camera
+        async function initCamera() {
+            try {
+                // Check if getUserMedia is supported
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    throw new Error('Camera API not supported in this browser');
+                }
+
+                // Request camera permissions with detailed constraints
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { 
+                        width: { ideal: 640, min: 320, max: 1280 },
+                        height: { ideal: 480, min: 240, max: 720 },
+                        facingMode: 'user',
+                        frameRate: { ideal: 30, min: 15 }
+                    },
+                    audio: false // No audio needed for emotion detection
+                });
+                
+                video.srcObject = stream;
+                
+                // Wait for video to be ready
+                video.onloadedmetadata = () => {
+                    status.className = 'status connected';
+                    status.innerHTML = '<i class="fas fa-check-circle"></i> Camera connected successfully';
+                    startBtn.disabled = false;
+                };
+                
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                let errorMessage = 'Error accessing camera. ';
+                
+                if (error.name === 'NotAllowedError') {
+                    errorMessage += 'Camera permission denied. Please allow camera access and refresh the page.';
+                } else if (error.name === 'NotFoundError') {
+                    errorMessage += 'No camera found. Please connect a camera and try again.';
+                } else if (error.name === 'NotSupportedError') {
+                    errorMessage += 'Camera not supported in this browser. Please use a modern browser.';
+                } else {
+                    errorMessage += 'Please check camera permissions and try again.';
+                }
+                
+                status.className = 'status error';
+                status.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${errorMessage}`;
+                
+                // Show permission guide for permission-related errors
+                if (error.name === 'NotAllowedError') {
+                    document.getElementById('permissionGuide').style.display = 'block';
+                }
+            }
+        }
+
+        // Start detection
+        function startDetection() {
+            if (!stream) return;
+            
+            isDetecting = true;
+            startBtn.disabled = true;
+            stopBtn.disabled = false;
+            
+            status.className = 'status connected';
+            status.innerHTML = '<i class="fas fa-eye"></i> Live detection active';
+            
+            // Start processing frames
+            detectionInterval = setInterval(processFrame, 1000); // Process every second
+        }
+
+        // Stop detection
+        function stopDetection() {
+            isDetecting = false;
+            startBtn.disabled = false;
+            stopBtn.disabled = true;
+            
+            status.className = 'status connecting';
+            status.innerHTML = '<i class="fas fa-pause"></i> Detection stopped';
+            
+            if (detectionInterval) {
+                clearInterval(detectionInterval);
+                detectionInterval = null;
+            }
+            
+            // Clear overlay
+            const ctx = overlay.getContext('2d');
+            ctx.clearRect(0, 0, overlay.width, overlay.height);
+            
+            // Reset emotion cards
+            document.querySelectorAll('.emotion-card').forEach(card => {
+                card.classList.remove('active');
+                card.querySelector('.emotion-confidence').textContent = '0%';
+            });
+        }
+
+        // Process frame
+        async function processFrame() {
+            if (!isDetecting) return;
+            
+            try {
+                // Capture frame from video
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0);
+                
+                // Convert to base64
+                const imageData = canvas.toDataURL('image/jpeg', 0.8);
+                
+                // Send to server for processing
+                const response = await fetch('/process_frame', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ image: imageData })
+                });
+                
+                const result = await response.json();
+                
+                if (result.error) {
+                    console.error('Detection error:', result.error);
+                    return;
+                }
+                
+                // Update overlay with face boxes
+                updateOverlay(result.faces);
+                
+                // Update emotion cards
+                updateEmotionCards(result.faces);
+                
+            } catch (error) {
+                console.error('Error processing frame:', error);
+            }
+        }
+
+        // Update overlay with face detection boxes
+        function updateOverlay(faces) {
+            const ctx = overlay.getContext('2d');
+            ctx.clearRect(0, 0, overlay.width, overlay.height);
+            
+            // Set overlay size to match video
+            overlay.width = video.videoWidth;
+            overlay.height = video.videoHeight;
+            
+            faces.forEach(face => {
+                // Draw face box
+                ctx.strokeStyle = '#667eea';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(face.x, face.y, face.w, face.h);
+                
+                // Draw emotion label
+                ctx.fillStyle = '#667eea';
+                ctx.font = '16px Inter';
+                ctx.fillText(face.emotion, face.x, face.y - 10);
+                
+                // Draw confidence
+                ctx.fillStyle = 'rgba(0,0,0,0.7)';
+                ctx.font = '12px Inter';
+                ctx.fillText(`${face.confidence}%`, face.x, face.y + face.h + 20);
+            });
+        }
+
+        // Update emotion cards
+        function updateEmotionCards(faces) {
+            // Reset all cards
+            document.querySelectorAll('.emotion-card').forEach(card => {
+                card.classList.remove('active');
+                card.querySelector('.emotion-confidence').textContent = '0%';
+            });
+            
+            // Update with detected emotions
+            faces.forEach(face => {
+                const card = document.querySelector(`[data-emotion="${face.emotion}"]`);
+                if (card) {
+                    card.classList.add('active');
+                    card.querySelector('.emotion-confidence').textContent = `${face.confidence}%`;
+                }
+            });
+        }
+
+        // Retry camera access
+        function retryCamera() {
+            const permissionGuide = document.getElementById('permissionGuide');
+            permissionGuide.style.display = 'none';
+            
+            status.className = 'status connecting';
+            status.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Retrying camera access...';
+            
+            initCamera();
+        }
+
+        // Event listeners
+        startBtn.addEventListener('click', startDetection);
+        stopBtn.addEventListener('click', stopDetection);
+
+        // Initialize camera when page loads
+        document.addEventListener('DOMContentLoaded', initCamera);
+
+        // Cleanup when page unloads
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html> 

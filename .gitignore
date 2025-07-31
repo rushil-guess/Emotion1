@@ -14,7 +14,7 @@ __pycache__/
 
 # TensorFlow / model checkpoints you don’t want versioned (if too big)
 *.ckpt
-*.h5
+
 
 # uploads / runtime artifacts (unless you intentionally want to keep some)
 static/uploads/

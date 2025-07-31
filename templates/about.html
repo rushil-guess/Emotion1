@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Emotion Detector - About</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .nav-link:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .nav-link.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Main Card */
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        /* Content Sections */
+        .content-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #667eea;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-content {
+            line-height: 1.8;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .feature-item {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid #e1e5e9;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Stats */
+        .stats-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 40px;
+            color: white;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-item h3 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Tips Section */
+        .tips-section {
+            background: #f8f9ff;
+            border-radius: 15px;
+            padding: 30px;
+            border: 2px solid #e1e5e9;
+        }
+
+        .tips-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .tips-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tips-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tip-icon {
+            color: #667eea;
+            font-size: 1.2rem;
+            min-width: 20px;
+        }
+
+        /* Technology Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tech-tag {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-card {
+                padding: 20px;
+            }
+            
+            .page-title {
+                font-size: 2rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <i class="fas fa-smile"></i> AI Emotion Detector
+            </a>
+            <ul class="nav-menu">
+                <li><a href="/" class="nav-link">Home</a></li>
+                <li><a href="/upload" class="nav-link">Upload Image</a></li>
+                <li><a href="/live" class="nav-link">Live Detection</a></li>
+                <li><a href="/about" class="nav-link active">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="main-card">
+                <h1 class="page-title">About Our AI Emotion Detector</h1>
+                
+                <!-- Overview Section -->
+                <div class="content-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-info-circle"></i>
+                        Overview
+                    </h2>
+                    <p class="section-content">
+                        Our AI Emotion Detector is a state-of-the-art facial emotion recognition system that uses deep learning to analyze facial expressions and identify emotions in real-time. Built with cutting-edge neural networks, it can detect seven primary emotions with high accuracy.
+                    </p>
+                </div>
+
+                <!-- Features Section -->
+                <div class="content-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-star"></i>
+                        Key Features
+                    </h2>
+                    <div class="feature-grid">
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="feature-title">Deep Learning Model</div>
+                            <div class="feature-desc">Powered by a convolutional neural network trained on the FER2013 dataset with over 35,000 facial images.</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="feature-title">Real-time Detection</div>
+                            <div class="feature-desc">Live webcam emotion detection with instant results and visual feedback.</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-upload"></i>
+                            </div>
+                            <div class="feature-title">Image Upload</div>
+                            <div class="feature-desc">Upload and analyze static images with detailed emotion analysis and confidence scores.</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="feature-title">Face Detection</div>
+                            <div class="feature-desc">Advanced face detection using OpenCV to ensure accurate emotion analysis.</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="feature-title">Confidence Scoring</div>
+                            <div class="feature-desc">Get detailed confidence scores for each detected emotion to understand prediction reliability.</div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <div class="feature-title">Responsive Design</div>
+                            <div class="feature-desc">Works seamlessly across all devices - desktop, tablet, and mobile phones.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Section -->
+                <div class="stats-section">
+                    <h2 style="margin-bottom: 20px; font-size: 2rem;">Model Performance</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <h3>7</h3>
+                            <p>Emotion Categories</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>95%+</h3>
+                            <p>Accuracy Rate</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>35K+</h3>
+                            <p>Training Images</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>< 1s</h3>
+                            <p>Processing Time</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Technology Section -->
+                <div class="content-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-cogs"></i>
+                        Technology Stack
+                    </h2>
+                    <p class="section-content">
+                        Our application is built using modern technologies and frameworks to ensure optimal performance and user experience.
+                    </p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">TensorFlow</span>
+                        <span class="tech-tag">OpenCV</span>
+                        <span class="tech-tag">Flask</span>
+                        <span class="tech-tag">HTML5</span>
+                        <span class="tech-tag">CSS3</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">WebRTC</span>
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="content-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Tips for Best Results
+                    </h2>
+                    <div class="tips-section">
+                        <ul class="tips-list">
+                            <li>
+                                <i class="fas fa-check-circle tip-icon"></i>
+                                <span>Ensure good lighting - well-lit faces provide better detection accuracy</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle tip-icon"></i>
+                                <span>Use front-facing photos - side profiles are harder to analyze</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle tip-icon"></i>
+                                <span>Keep faces clearly visible - avoid blurry or heavily filtered images</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle tip-icon"></i>
+                                <span>Maintain appropriate distance - not too close or too far from the camera</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle tip-icon"></i>
+                                <span>Use high-quality images - higher resolution leads to better results</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle tip-icon"></i>
+                                <span>Avoid multiple faces - single face detection works best</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Dataset Section -->
+                <div class="content-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-database"></i>
+                        Dataset Information
+                    </h2>
+                    <p class="section-content">
+                        Our model is trained on the FER2013 (Facial Expression Recognition 2013) dataset, which contains 35,887 grayscale images of 48x48 pixels. The dataset includes facial expressions categorized into seven emotions: Happy, Sad, Angry, Fear, Surprise, Disgust, and Neutral. Each image is labeled by human annotators, ensuring high-quality training data for accurate emotion recognition.
+                    </p>
+                </div>
+
+                <!-- Privacy Section -->
+                <div class="content-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-user-shield"></i>
+                        Privacy & Security
+                    </h2>
+                    <p class="section-content">
+                        We prioritize your privacy and security. All image processing is done locally on our servers, and uploaded images are automatically deleted after processing. We do not store or share any personal data. The live detection feature uses your device's camera but does not record or store any video footage.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-smile"></i> AI Emotion Detector</h3>
+                    <p>Advanced facial emotion recognition powered by deep learning technology.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/upload">Upload Image</a></li>
+                        <li><a href="/live">Live Detection</a></li>
+                        <li><a href="/about">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Technology</h4>
+                    <ul>
+                        <li>TensorFlow</li>
+                        <li>OpenCV</li>
+                        <li>Flask</li>
+                        <li>Deep Learning</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="https://www.linkedin.com/in/rushil-reddy-gujjula-12212a284" target="_blank" class="social-link">
+                            <i class="fab fa-linkedin"></i>
+                            <span>LinkedIn</span>
+                        </a>
+                        <a href="https://github.com/rushil-guess" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AI Emotion Detector. Developed by <a href="https://www.linkedin.com/in/rushil-reddy-gujjula-12212a284" target="_blank">Rushil Reddy Gujjula</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .footer {
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 40px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .footer-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .footer-section p {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #667eea;
+        }
+
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .social-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            padding: 8px 0;
+        }
+
+        .social-link:hover {
+            color: #667eea;
+        }
+
+        .social-link i {
+            font-size: 1.2rem;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .footer-bottom a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+        }
+    </style>
+</body>
+</html> 
