@@ -335,6 +335,166 @@
                 padding: 12px 20px;
                 font-size: 1rem;
             }
+
+            .webcam-section {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .webcam-container {
+                min-height: 400px;
+            }
+
+            #video {
+                min-height: 400px;
+            }
+
+            .emotion-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 8px;
+            }
+
+            .emotion-card {
+                padding: 12px 8px;
+            }
+
+            .emotion-icon {
+                font-size: 1.5rem;
+            }
+
+            .emotion-name {
+                font-size: 0.9rem;
+            }
+
+            .emotion-confidence {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 10px 20px;
+            }
+
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+
+            .nav-link {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .main-content {
+                padding: 20px 10px;
+            }
+
+            .main-card {
+                padding: 15px;
+            }
+
+            .page-title {
+                font-size: 1.8rem;
+                margin-bottom: 20px;
+            }
+
+            .webcam-container {
+                min-height: 300px;
+            }
+
+            #video {
+                min-height: 300px;
+            }
+
+            .control-btn {
+                margin: 3px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .results-panel {
+                padding: 15px;
+            }
+
+            .results-title {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+            }
+
+            .emotion-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 6px;
+            }
+
+            .emotion-card {
+                padding: 10px 6px;
+            }
+
+            .emotion-icon {
+                font-size: 1.3rem;
+            }
+
+            .emotion-name {
+                font-size: 0.8rem;
+            }
+
+            .emotion-confidence {
+                font-size: 0.7rem;
+            }
+
+            .status {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .page-title {
+                font-size: 1.6rem;
+            }
+
+            .webcam-container {
+                min-height: 250px;
+            }
+
+            #video {
+                min-height: 250px;
+            }
+
+            .control-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+
+            .emotion-grid {
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+                gap: 5px;
+            }
+
+            .emotion-card {
+                padding: 8px 5px;
+            }
+
+            .emotion-icon {
+                font-size: 1.2rem;
+            }
+
+            .emotion-name {
+                font-size: 0.7rem;
+            }
+
+            .emotion-confidence {
+                font-size: 0.6rem;
+            }
+
+            .nav-link {
+                padding: 0.2rem 0.6rem;
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
