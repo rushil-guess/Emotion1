@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facial Emotion Detection</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ebd5, #acb6e5);
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      color: #333;
+      scroll-behavior: smooth;
+    }
+
+    .navbar-brand {
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+
+    .app-title {
+      font-size: 2.5rem;
+      color: #ffffff;
+      background-color: #4a90e2;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      letter-spacing: 1px;
+    }
+
+    .upload-form {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+
+    .result-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      margin-top: 40px;
+      transition: transform 0.3s;
+    }
+
+    .result-box:hover {
+      transform: scale(1.02);
+    }
+
+    .img-fluid {
+      max-width: 100%;
+      height: auto;
+      border: 5px solid #4a90e2;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .emotion-label {
+      font-size: 1.8rem;
+      color: #4a4a4a;
+      margin: 15px 0;
+    }
+
+    .highlight {
+      color: #e94e77;
+      font-weight: bold;
+    }
+
+    .confidence-score {
+      font-size: 1.2rem;
+      color: #555;
+      background: #dff9fb;
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    .about-section {
+      background: #f0f8ff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      margin-top: 40px;
+      text-align: left;
+    }
+
+    .feature-list {
+      padding-left: 20px;
+      color: #333;
+    }
+
+    .feature-list li {
+      margin-bottom: 10px;
+    }
+
+    .btn-primary:hover {
+      background-color: #357ae8;
+      border-color: #357ae8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">EmotionApp</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#how-it-works">How It Works</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container text-center my-5">
+    <h1 class="app-title">Facial Emotion Detection App 😃</h1>
+
+    <form action="/" method="POST" enctype="multipart/form-data" class="upload-form mt-4">
+      <input type="file" name="file" class="form-control mb-3" required>
+      <button type="submit" class="btn btn-primary w-100">Upload & Detect Emotion</button>
+    </form>
+    
+    {% if image_path %}
+    <div class="result-box mt-4">
+      <h2>Prediction Result</h2>
+      <img src="{{ image_path }}" alt="Uploaded Image" class="img-fluid rounded">
+      <h3 class="emotion-label">Emotion: <span class="highlight">{{ emotion }}</span></h3>
+      <p class="confidence-score">Confidence: {{ confidence }}%</p>
+    </div>
+    {% endif %}
+    <!-- About Section -->
+    <div class="about-section mt-5" id="about">
+      <h2>About This App</h2>
+      <p>This Facial Emotion Detection App uses a deep learning model trained on the <strong>FER2013</strong> dataset. The dataset contains 35,887 grayscale images of 48x48 pixels, each labeled with one of seven emotions.</p>
+      <h4>Features:</h4>
+      <ul class="feature-list">
+        <li>Upload an image and detect emotion instantly</li>
+        <li>Model trained on FER2013 dataset with high accuracy</li>
+        <li>Visual display of uploaded image and prediction</li>
+        <li>Confidence score for prediction</li>
+      </ul>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="about-section mt-5" id="how-it-works">
+      <h2>How It Works</h2>
+      <ol class="feature-list">
+        <li><strong>Select Image:</strong> Upload a clear facial image (grayscale preferred).</li>
+        <li><strong>Model Prediction:</strong> The image is processed and passed through a trained neural network.</li>
+        <li><strong>Emotion Classification:</strong> The model classifies the emotion from 7 categories.</li>
+        <li><strong>Result Display:</strong> Predicted emotion and confidence score are shown on screen.</li>
+      </ol>
+    </div>
+
+    <!-- Prediction Result -->
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
